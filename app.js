@@ -41,13 +41,6 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-// const sessionOptions = {
-//     secret: "mysupersecrectcode",
-//     resave: false,
-//     saveUnintialized: true,
-// };
-
-// app.use(session(sessionOptions));
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
@@ -67,7 +60,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie:{
-    //expires: Date.now() + 7 * 24* 60*60*1000,
     maxAge:7 * 24* 60*60*1000,
     httpOnly:true,
   },
@@ -93,34 +85,12 @@ app.use((req, res, next) =>{
 });
  
 
-// app.get("/", (req,res)=>{
-//   res.send("Iam ready");
-// });
-
-// app.get("/demouser", async(req, res)=>{
-//   let fakeUser = new User({email:"student@gmail.com",
-//   username:"student"});
-//  let registeredUser= await User.register(fakeUser,"student");
-//  res.send(registeredUser);
-// });
-
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
 
-// app.get("/testListing", wrapAsync(async(req,res)=>{
-//     let sampleListing = new Listing({
-//         title: "My new villa",
-//         desription: "By the beach",
-//         price:1500,
-//         location:"Goa",
-//         country:"India",
-//     });
-//     await sampleListing.save();
-//     console.log("sample was saved");
-//     res.send("successful testing");
-// }));
+
 
 app.all("*", (req, res, next) =>{
     next(new ExpressError(404, "Page Not Found!"));
@@ -128,7 +98,6 @@ app.all("*", (req, res, next) =>{
 
 app.use((err, req, res, next)=>{
     let { statusCode=500, message="Something Went Wrong!" } = err;
-    //res.status(statusCode).send(message);
     res.render("error.ejs",{message});
 });
 
